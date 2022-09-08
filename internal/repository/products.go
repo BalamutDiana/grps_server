@@ -34,3 +34,25 @@ func (r *Products) GetByName(ctx context.Context, name string) (product.Product,
 	}
 	return prod, nil
 }
+
+func (r *Products) UpdateByName(ctx context.Context, prod product.Product) error {
+
+	filter := bson.D{{Key: "name", Value: prod.Name}}
+	update := bson.D{
+		{Key: "$set", Value: bson.D{
+			{Key: "price", Value: prod.Price},
+		}},
+		{Key: "$inc", Value: bson.D{
+			{Key: "changes_count", Value: 1},
+		}},
+		{Key: "$set", Value: bson.D{
+			{Key: "timestamp", Value: prod.Timestamp},
+		}},
+	}
+
+	_, err := r.db.Collection("products").UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}

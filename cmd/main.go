@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/csv"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -85,8 +84,6 @@ func main() {
 	})
 	opts.ApplyURI(cfg.DB.URI)
 
-	fmt.Println(cfg)
-
 	dbClient, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		log.Fatal(err)
@@ -103,8 +100,14 @@ func main() {
 
 	//url := "http://164.92.251.245:8080/api/v1/products/"
 	//getRowsFromCSV(url, productsService)
+
 	var item products.Product
 	item, err = productsService.GetByName(context.TODO(), "Unbranded Plastic Chicken")
-	fmt.Println(item.Price)
+	item.Price = 453453
+	item.Timestamp = time.Now()
 
+	err = productsService.UpdateByName(context.TODO(), item)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
