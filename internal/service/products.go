@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -37,7 +36,6 @@ func (s *Product) List(ctx context.Context, req *products.ListRequest) (*product
 		Field: req.SortField,
 		Asc:   req.SortAsc,
 	}
-	fmt.Println(req.SortField)
 
 	items, err := s.repo.List(ctx, paging, sorting)
 	if err != nil {
@@ -72,10 +70,6 @@ func (s *Product) Fetch(ctx context.Context, req *products.FetchRequest) (*produ
 		if idx == 0 {
 			continue
 		}
-
-		// if idx == 30 {
-		// 	break
-		// }
 
 		name := row[0]
 		price, err := strconv.Atoi(row[1])
