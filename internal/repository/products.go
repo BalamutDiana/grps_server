@@ -59,16 +59,12 @@ func (r *Products) UpdateByName(ctx context.Context, prod product.Product) error
 	return nil
 }
 
-func (r *Products) List(ctx context.Context, paging product.PagingParams, sorting []product.SortingParams) ([]product.Product, error) {
+func (r *Products) List(ctx context.Context, paging product.PagingParams, sorting product.SortingParams) ([]product.Product, error) {
 	opts := options.Find()
-	sortOpts := bson.D{}
-	for _, item := range sorting {
-		if item.Asc {
-			sortOpts = append(sortOpts, bson.E{Key: fmt.Sprintf("%v", item.Field), Value: 1})
-		} else {
-			sortOpts = append(sortOpts, bson.E{Key: fmt.Sprintf("%v", item.Field), Value: -1})
-		}
+	sortOpts := bson.D{
+		{Key: fmt.Sprintf("%v", sorting.Field), Value: sorting.Asc},
 	}
+
 	opts.SetSort(sortOpts)
 	opts.SetSkip(int64(paging.Offset))
 	opts.SetLimit(int64(paging.Limit))

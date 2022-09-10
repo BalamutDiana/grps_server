@@ -1,7 +1,24 @@
 package products
 
 import (
+	"errors"
 	"time"
+)
+
+const (
+	SORTINGFIELD_NAME  = "NAME"
+	SORTINGFIELD_PRICE = "PRICE"
+	SORTINGFIELD_COUNT = "COUNT"
+	SORTINGFIELD_TIME  = "TIME"
+)
+
+var (
+	fields = map[string]ListRequest_SortingField{
+		SORTINGFIELD_NAME:  ListRequest_NAME,
+		SORTINGFIELD_PRICE: ListRequest_PRICE,
+		SORTINGFIELD_COUNT: ListRequest_COUNT,
+		SORTINGFIELD_TIME:  ListRequest_TIME,
+	}
 )
 
 type Product struct {
@@ -39,5 +56,14 @@ func NewProductsSortingParams() ProductsSortingParams {
 
 type SortingParams struct {
 	Field interface{}
-	Asc   bool
+	Asc   int32
+}
+
+func ToPbFields(sort_field string) (ListRequest_SortingField, error) {
+	val, ex := fields[sort_field]
+	if !ex {
+		return 0, errors.New("invalid entity")
+	}
+
+	return val, nil
 }
