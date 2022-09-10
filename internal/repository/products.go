@@ -2,10 +2,13 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	product "github.com/BalamutDiana/grps_server/pkg/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Products struct {
@@ -55,4 +58,40 @@ func (r *Products) UpdateByName(ctx context.Context, prod product.Product) error
 		return err
 	}
 	return nil
+}
+
+func (r *Products) List(ctx context.Context, paging product.PagingParams, sorting []product.SortingParams) ([]product.Product, error) {
+	opts := options.Find()
+	sortOpts := bson.D{}
+	for _, item := range sorting {
+		if item.Asc {
+			sortOpts = append(sortOpts, bson.E{Key: fmt.Sprintf("%v", item.Field), Value: 1})
+		} else {
+			sortOpts = append(sortOpts, bson.E{Key: fmt.Sprintf("%v", item.Field), Value: -1})
+		}
+	}
+	opts.SetSort(sortOpts)
+	opts.SetSkip(int64(paging.Offset))
+	opts.SetLimit(int64(paging.Limit))
+
+	cur, err := r.db.Collection("products").Find(ctx, bson.D{}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	var productsList []product.Product
+	for cur.Next(ctx) {
+		var elem product.Product
+		if err := cur.Decode(&elem); err != nil {
+			return nil, err
+		}
+		productsList = append(productsList, elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return productsList, nil
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/csv"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -98,16 +99,35 @@ func main() {
 	productsRepo := repository.NewProducts(db)
 	productsService := service.NewProduct(productsRepo)
 
-	//url := "http://164.92.251.245:8080/api/v1/products/"
-	//getRowsFromCSV(url, productsService)
+	// url := "http://164.92.251.245:8080/api/v1/products/"
+	// getRowsFromCSV(url, productsService)
 
-	var item products.Product
-	item, err = productsService.GetByName(context.TODO(), "Unbranded Plastic Chicken")
-	item.Price = 453453
-	item.Timestamp = time.Now()
+	// var item products.Product
+	// item, err = productsService.GetByName(context.TODO(), "Unbranded Plastic Chicken")
+	// item.Price = 453453
+	// item.Timestamp = time.Now()
 
-	err = productsService.UpdateByName(context.TODO(), item)
-	if err != nil {
-		log.Fatal(err)
+	// err = productsService.UpdateByName(context.TODO(), item)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	paging := products.PagingParams{
+		Offset: 0,
+		Limit:  10,
 	}
+
+	sorting := products.NewProductsSortingParams()
+
+	sorting1 := products.SortingParams{
+		Field: sorting.Price,
+		Asc:   false,
+	}
+
+	var sortingList []products.SortingParams
+	sortingList = append(sortingList, sorting1)
+
+	var item []products.Product
+	item, err = productsService.List(ctx, paging, sortingList)
+	fmt.Println(item)
 }

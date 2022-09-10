@@ -10,6 +10,7 @@ type Repository interface {
 	Insert(ctx context.Context, item products.Product) error
 	GetByName(ctx context.Context, name string) (products.Product, error)
 	UpdateByName(ctx context.Context, prod products.Product) error
+	List(ctx context.Context, paging products.PagingParams, sorting []products.SortingParams) ([]products.Product, error)
 }
 
 type Product struct {
@@ -32,4 +33,8 @@ func (s *Product) GetByName(ctx context.Context, name string) (products.Product,
 
 func (s *Product) UpdateByName(ctx context.Context, prod products.Product) error {
 	return s.repo.UpdateByName(ctx, prod)
+}
+
+func (s *Product) List(ctx context.Context, paging products.PagingParams, sorting []products.SortingParams) ([]products.Product, error) {
+	return s.repo.List(ctx, paging, sorting)
 }
