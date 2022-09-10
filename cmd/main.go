@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"encoding/csv"
 	"fmt"
 	"log"
-	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/BalamutDiana/grps_server/internal/config"
@@ -17,56 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-func readCSVFromUrl(url string) ([][]string, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	reader := csv.NewReader(resp.Body)
-	reader.Comma = ';'
-	data, err := reader.ReadAll()
-	if err != nil {
-		return nil, err
-	}
-
-	return data, nil
-}
-
-func getRowsFromCSV(url string, service *service.Product) {
-
-	data, err := readCSVFromUrl(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for idx, row := range data {
-		if idx == 0 {
-			continue
-		}
-
-		if idx == 0 {
-			break
-		}
-
-		key := row[0]
-		value, err := strconv.Atoi(row[1])
-		if err != nil {
-			log.Fatal(err)
-		}
-		//fmt.Println(key, value)
-		var item products.Product
-
-		item.Name = key
-		item.Price = value
-		item.ChangesCount = 1
-		item.Timestamp = time.Now()
-
-		service.Insert(context.TODO(), item)
-	}
-}
 
 func main() {
 
@@ -99,18 +46,10 @@ func main() {
 	productsRepo := repository.NewProducts(db)
 	productsService := service.NewProduct(productsRepo)
 
-	// url := "http://164.92.251.245:8080/api/v1/products/"
-	// getRowsFromCSV(url, productsService)
-
-	// var item products.Product
-	// item, err = productsService.GetByName(context.TODO(), "Unbranded Plastic Chicken")
-	// item.Price = 453453
-	// item.Timestamp = time.Now()
-
-	// err = productsService.UpdateByName(context.TODO(), item)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	url := "http://164.92.251.245:8080/api/v1/products/"
+	if err = productsService.Fetch(ctx, url); err != nil {
+		log.Fatal(err)
+	}
 
 	paging := products.PagingParams{
 		Offset: 0,
@@ -129,5 +68,8 @@ func main() {
 
 	var item []products.Product
 	item, err = productsService.List(ctx, paging, sortingList)
-	fmt.Println(item)
+
+	for _, x := range item {
+		fmt.Println(x)
+	}
 }

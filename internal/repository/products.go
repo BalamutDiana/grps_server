@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"log"
 
 	product "github.com/BalamutDiana/grps_server/pkg/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -90,7 +89,7 @@ func (r *Products) List(ctx context.Context, paging product.PagingParams, sortin
 	}
 
 	if err := cur.Err(); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return productsList, nil
