@@ -17,10 +17,10 @@ message FetchResponse {
 message ListRequest {
 
     enum SortingField {
-        NAME = 0;
-        PRICE = 1;
-        COUNT = 2;
-        TIME = 3;
+        name = 0;
+        price = 1;
+        changes_count = 2;
+        timestamp = 3;
     }
 
     SortingField sort_field = 1;

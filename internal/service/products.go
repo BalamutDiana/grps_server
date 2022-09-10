@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -36,6 +37,7 @@ func (s *Product) List(ctx context.Context, req *products.ListRequest) (*product
 		Field: req.SortField,
 		Asc:   req.SortAsc,
 	}
+	fmt.Println(req.SortField)
 
 	items, err := s.repo.List(ctx, paging, sorting)
 	if err != nil {

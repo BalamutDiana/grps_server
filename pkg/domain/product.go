@@ -6,18 +6,18 @@ import (
 )
 
 const (
-	SORTINGFIELD_NAME  = "NAME"
-	SORTINGFIELD_PRICE = "PRICE"
-	SORTINGFIELD_COUNT = "COUNT"
-	SORTINGFIELD_TIME  = "TIME"
+	SORTINGFIELD_NAME  = "name"
+	SORTINGFIELD_PRICE = "price"
+	SORTINGFIELD_COUNT = "changes_count"
+	SORTINGFIELD_TIME  = "timestamp"
 )
 
 var (
 	fields = map[string]ListRequest_SortingField{
-		SORTINGFIELD_NAME:  ListRequest_NAME,
-		SORTINGFIELD_PRICE: ListRequest_PRICE,
-		SORTINGFIELD_COUNT: ListRequest_COUNT,
-		SORTINGFIELD_TIME:  ListRequest_TIME,
+		SORTINGFIELD_NAME:  ListRequest_name,
+		SORTINGFIELD_PRICE: ListRequest_price,
+		SORTINGFIELD_COUNT: ListRequest_changes_count,
+		SORTINGFIELD_TIME:  ListRequest_timestamp,
 	}
 )
 
