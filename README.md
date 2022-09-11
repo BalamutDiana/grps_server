@@ -1,4 +1,4 @@
-# Movie list management app
+# Golang gRPC server
 
 This application accepts function call requests using gRPC.  
 c.Fetch(url) - receives CSV document by endpoint, adds/updates data to MongoDB  
