@@ -55,11 +55,9 @@ func (s *Product) List(ctx context.Context, req *products.ListRequest) (*product
 	return &products.ListResponse{
 		Product: sorted_products,
 	}, nil
-
 }
 
 func (s *Product) Fetch(ctx context.Context, req *products.FetchRequest) (*products.FetchResponse, error) {
-
 	url := req.Url
 	data, err := readCSVFromUrl(url)
 	if err != nil {
