@@ -44,19 +44,19 @@ func (s *Product) List(ctx context.Context, req *products.ListRequest) (*product
 	if err != nil {
 		return nil, err
 	}
-	var sorted_products []*products.ProductItem
+	var sortedProducts []*products.ProductItem
 
 	for _, x := range items {
-		var sorted_product products.ProductItem
-		sorted_product.Name = x.Name
-		sorted_product.Price = int32(x.Price)
-		sorted_product.Count = int32(x.ChangesCount)
-		sorted_product.Timestamp = timestamppb.New(x.Timestamp)
-		sorted_products = append(sorted_products, &sorted_product)
+		var sortedProduct products.ProductItem
+		sortedProduct.Name = x.Name
+		sortedProduct.Price = int32(x.Price)
+		sortedProduct.Count = int32(x.ChangesCount)
+		sortedProduct.Timestamp = timestamppb.New(x.Timestamp)
+		sortedProducts = append(sortedProducts, &sortedProduct)
 	}
 
 	return &products.ListResponse{
-		Product: sorted_products,
+		Product: sortedProducts,
 	}, nil
 }
 
