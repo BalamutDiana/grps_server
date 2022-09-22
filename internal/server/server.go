@@ -37,3 +37,7 @@ func (s *Server) ListenAndServe(port int) error {
 
 	return nil
 }
+
+func (s *Server) Stop() func() {
+	return s.grpcSrv.GracefulStop
+}

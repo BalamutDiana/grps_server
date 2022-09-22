@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/BalamutDiana/grps_server/internal/config"
@@ -50,7 +53,16 @@ func main() {
 
 	fmt.Println("SERVER STARTED", time.Now())
 
-	if err := srv.ListenAndServe(cfg.Server.Port); err != nil {
-		log.Fatal(err)
-	}
+	go func() {
+		if err := srv.ListenAndServe(cfg.Server.Port); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	fmt.Println("SERVER STOPPED", time.Now())
+	srv.Stop()
 }
