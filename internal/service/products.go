@@ -5,16 +5,19 @@ import (
 	"strconv"
 	"time"
 
-	products "github.com/BalamutDiana/grps_server/pkg/domain"
+	"github.com/BalamutDiana/grps_server/gen/products"
+	"github.com/BalamutDiana/grps_server/pkg/csv"
+	"github.com/BalamutDiana/grps_server/pkg/domain"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Repository interface {
-	Insert(ctx context.Context, item products.Product) error
-	GetByName(ctx context.Context, name string) (products.Product, error)
-	UpdateByName(ctx context.Context, prod products.Product) error
-	List(ctx context.Context, paging products.PagingParams, sorting products.SortingParams) ([]products.Product, error)
+	Insert(ctx context.Context, item domain.Product) error
+	GetByName(ctx context.Context, name string) (domain.Product, error)
+	UpdateByName(ctx context.Context, prod domain.Product) error
+	List(ctx context.Context, paging domain.PagingParams, sorting domain.SortingParams) ([]domain.Product, error)
 }
 
 type Product struct {
@@ -28,13 +31,13 @@ func NewProduct(repo Repository) *Product {
 }
 
 func (s *Product) List(ctx context.Context, req *products.ListRequest) (*products.ListResponse, error) {
-	paging := products.PagingParams{
+	paging := domain.PagingParams{
 		Offset: int(req.GetPagingOffset()),
 		Limit:  int(req.GetPagingLimit()),
 	}
-	sorting := products.SortingParams{
-		Field: req.SortField,
-		Asc:   req.SortAsc,
+	sorting := domain.SortingParams{
+		Field: req.GetSortField(),
+		Asc:   req.GetSortAsc(),
 	}
 
 	items, err := s.repo.List(ctx, paging, sorting)
@@ -59,7 +62,7 @@ func (s *Product) List(ctx context.Context, req *products.ListRequest) (*product
 
 func (s *Product) Fetch(ctx context.Context, req *products.FetchRequest) (*products.FetchResponse, error) {
 	url := req.Url
-	data, err := readCSVFromUrl(url)
+	data, err := csv.ReadCSVFromUrl(url)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +78,7 @@ func (s *Product) Fetch(ctx context.Context, req *products.FetchRequest) (*produ
 			return nil, err
 		}
 
-		var prod products.Product
+		var prod domain.Product
 
 		item, err := s.repo.GetByName(ctx, name)
 		if err != nil {

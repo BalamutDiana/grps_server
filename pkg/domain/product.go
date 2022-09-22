@@ -1,8 +1,10 @@
-package products
+package domain
 
 import (
 	"errors"
 	"time"
+
+	"github.com/BalamutDiana/grps_server/gen/products"
 )
 
 const (
@@ -13,11 +15,11 @@ const (
 )
 
 var (
-	fields = map[string]ListRequest_SortingField{
-		SORTINGFIELD_NAME:  ListRequest_name,
-		SORTINGFIELD_PRICE: ListRequest_price,
-		SORTINGFIELD_COUNT: ListRequest_changes_count,
-		SORTINGFIELD_TIME:  ListRequest_timestamp,
+	fields = map[string]products.ListRequest_SortingField{
+		SORTINGFIELD_NAME:  products.ListRequest_name,
+		SORTINGFIELD_PRICE: products.ListRequest_price,
+		SORTINGFIELD_COUNT: products.ListRequest_changes_count,
+		SORTINGFIELD_TIME:  products.ListRequest_timestamp,
 	}
 )
 
@@ -59,7 +61,7 @@ type SortingParams struct {
 	Asc   int32
 }
 
-func ToPbFields(sort_field string) (ListRequest_SortingField, error) {
+func ToPbFields(sort_field string) (products.ListRequest_SortingField, error) {
 	val, ex := fields[sort_field]
 	if !ex {
 		return 0, errors.New("invalid entity")

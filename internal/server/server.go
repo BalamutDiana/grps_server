@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	products "github.com/BalamutDiana/grps_server/pkg/domain"
+	"github.com/BalamutDiana/grps_server/gen/products"
+
 	"google.golang.org/grpc"
 )
 

@@ -1,11 +1,11 @@
-package service
+package csv
 
 import (
 	"encoding/csv"
 	"net/http"
 )
 
-func readCSVFromUrl(url string) ([][]string, error) {
+func ReadCSVFromUrl(url string) ([][]string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err

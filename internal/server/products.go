@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	products "github.com/BalamutDiana/grps_server/pkg/domain"
+	products "github.com/BalamutDiana/grps_server/gen/products"
 )
 
 type ProductService interface {
